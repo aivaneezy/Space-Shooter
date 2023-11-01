@@ -22,7 +22,6 @@ sf::Vector2f normalizeVector(sf::Vector2f vector)
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "RPG");
 	// ---------------------- INIT --------------
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 0;
@@ -58,63 +57,70 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-
-			window.close();
-			std::cout << "Window is closed" << std::endl;
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+				std::cout << "Window is closed" << std::endl;
+			}
+			
+		
 		}
-	}
-	// PLAYERS MOVEMENT
-	sf::Vector2f players_movement = sprite.getPosition();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		sprite.setPosition(players_movement - sf::Vector2f(0, 1) * 0.1f);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		sprite.setPosition(players_movement + sf::Vector2f(0, 1) * 0.1f);
-	}
+	
+		// PLAYERS MOVEMENT
+		sf::Vector2f players_movement = sprite.getPosition();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			sprite.setPosition(players_movement - sf::Vector2f(0, 1) * 0.1f);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			sprite.setPosition(players_movement + sf::Vector2f(0, 1) * 0.1f);
+		}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		sprite.setPosition(players_movement + sf::Vector2f(1, 0) * 0.1f);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			sprite.setPosition(players_movement + sf::Vector2f(1, 0) * 0.1f);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			sprite.setPosition(players_movement - sf::Vector2f(1, 0) * 0.1f);
+		}
+
+		// SHOOTING BULLETS
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			// pushing the bullets into the vector array
+			bullets.push_back(sf::RectangleShape(sf::Vector2f(20.f, 20.f)));
+
+			/*Setting the initial posiiton of the first bullet*/
+			size_t lastElement = bullets.size() - 1;
+			bullets[lastElement].setPosition(sprite.getPosition());
+		}
+
+		/*Calculating bullets direction*/
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			/*Calculating the bullet direction*/
+			sf::Vector2f direction = enemy.getPosition() - bullets[i].getPosition();
+			direction = normalizeVector(direction); // normalizzing the vector, converting to 1 unit
+			bullets[i].setPosition(bullets[i].getPosition() + direction * BULLET_SPEED);
+		}
+
+
+		// ---- DRAW ------
+		window.clear(sf::Color::Black);
+		// ----------- UPDATE -------------
+
+		window.draw(enemy);
+		window.draw(sprite);
+
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			window.draw(bullets[i]);
+		}
+		window.display();
+
+
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		sprite.setPosition(players_movement - sf::Vector2f(1, 0) * 0.1f);
-	}
-
-	// SHOOTING BULLETS
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		// pushing the bullets into the vector array
-		bullets.push_back(sf::RectangleShape(sf::Vector2f(20.f, 20.f)));
-
-		/*Setting the initial posiiton of the first bullet*/
-		size_t lastElement = bullets.size() - 1;
-		bullets[lastElement].setPosition(sprite.getPosition());
-	}
-
-	/*Calculating bullets direction*/
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		/*Calculating the bullet direction*/
-		sf::Vector2f direction = enemy.getPosition() - bullets[i].getPosition();
-		direction = normalizeVector(direction); // normalizzing the vector, converting to 1 unit
-		bullets[i].setPosition(bullets[i].getPosition() + direction * BULLET_SPEED);
-	}
-
-
-	// ---- DRAW ------
-	window.clear(sf::Color::Black);
-	// ----------- UPDATE -------------
-
-	window.draw(enemy);
-	window.draw(sprite);
-
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		window.draw(bullets[i]);
-	}
-	window.display();
 	return 0;
 }
