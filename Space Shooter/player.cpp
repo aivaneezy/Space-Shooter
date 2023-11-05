@@ -22,48 +22,45 @@ void Player::LoadTexturePlayer()
 	sprite.setScale(0.5f, 0.5f);
 }
 
-void Player::Update(Enemy &enemy)
+void Player::Update(float deltaTime, Enemy &enemy, sf::RenderWindow &window)
 {
 	// PLAYERS MOVEMENT
 	sf::Vector2f players_movement = sprite.getPosition();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		sprite.setPosition(players_movement - sf::Vector2f(0, 1) * 0.1f);
+		sprite.setPosition(players_movement - sf::Vector2f(0, 1) *playerSpeed * deltaTime);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		sprite.setPosition(players_movement + sf::Vector2f(0, 1) * 0.1f);
+		sprite.setPosition(players_movement + sf::Vector2f(0, 1) *playerSpeed * deltaTime);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		sprite.setPosition(players_movement + sf::Vector2f(1, 0) * 0.1f);
+		sprite.setPosition(players_movement + sf::Vector2f(1, 0) *playerSpeed * deltaTime );
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		sprite.setPosition(players_movement - sf::Vector2f(1, 0) * 0.1f);
+		sprite.setPosition(players_movement - sf::Vector2f(1, 0) *playerSpeed * deltaTime);
 	}
 
-	//// SHOOTING BULLETS
+	// SHOOTING BULLETS
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		// pushing the bullets into the vector array
 		bullets.push_back(sf::RectangleShape(sf::Vector2f(20.f, 20.f)));
-
 		/*Setting the initial posiiton of the first bullet*/
-		size_t lastElement = bullets.size() - 1;
-		bullets[lastElement].setPosition(sprite.getPosition());
+		bullets.back().setPosition(sprite.getPosition());
+
+		// calculating the bullets direction relative to the mouse position
+		angle.push_back(atan2(sf::Mouse::getPosition(window).y - sprite.getPosition().y,
+			                                  sf::Mouse::getPosition(window).x - sprite.getPosition().x));
 	}
 
-	/*Calculating bullets direction*/
-	for (size_t i = 0; i < bullets.size(); i++)
+	for (int i = 0; i < bullets.size(); i++)
 	{
-		/*Calculating the bullet direction*/
-		sf::Vector2f direction = enemy.EnemySprite.getPosition() - bullets[i].getPosition();
-		direction = Math::normalizeVector(direction); // normalizzing the vector, converting to 1 unit
-		bullets[i].setPosition(bullets[i].getPosition() + direction * BULLET_SPEED);
+		bullets[i].move(5 * cos(angle[i]), 5 * sin(angle[i]));
 	}
-	//}
 }
 
 void Player::Draw(sf::RenderWindow &window)
@@ -73,5 +70,6 @@ void Player::Draw(sf::RenderWindow &window)
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		window.draw(bullets[i]);
+	
 	}
 }

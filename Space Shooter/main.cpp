@@ -18,7 +18,7 @@ int main()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 0;
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "RPG", sf::Style::Default, settings);
-
+	window.setFramerateLimit(240);
 
 	/*Player class object*/
 	Player player;
@@ -36,7 +36,7 @@ int main()
 
 	
 
-
+	sf::Clock clock;
 	//------------- MAIN GAME LOOP -----------------
 	while (window.isOpen())
 	{
@@ -49,11 +49,11 @@ int main()
 				window.close();
 				std::cout << "Window is closed" << std::endl;
 			}
-			
-		
 		}
+		sf::Time delaTimeTimer = clock.restart();
+		float deltaTime = delaTimeTimer.asMilliseconds();
 	
-		player.Update(enemy);
+		player.Update(deltaTime, enemy, window);
 		enemy.Update();
 		
 
