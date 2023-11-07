@@ -58,4 +58,6 @@ void Enemy::Draw(sf::RenderWindow &window)
 		enemies[i].setPosition(enemyPositions[i]);
 		window.draw(enemies[i]);
 	}
+
+	std::cout << "TEST FOR COMMIT" << std::endl;
 }
