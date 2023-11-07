@@ -28,7 +28,7 @@ int main()
 	/*Enemy class object*/
 	Enemy enemy;
 	enemy.Init();
-	enemy.LoadEnemyTexture();
+	//enemy.LoadEnemyTexture();
 
 	
 
@@ -53,8 +53,8 @@ int main()
 		sf::Time delaTimeTimer = clock.restart();
 		float deltaTime = delaTimeTimer.asMilliseconds();
 	
-		player.Update(deltaTime, enemy, window);
-		enemy.Update();
+		player.Update(deltaTime, enemy, window, clock);
+		enemy.Update(window);
 		
 
 	

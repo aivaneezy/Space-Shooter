@@ -22,7 +22,7 @@ void Player::LoadTexturePlayer()
 	sprite.setScale(0.5f, 0.5f);
 }
 
-void Player::Update(float deltaTime, Enemy &enemy, sf::RenderWindow &window)
+void Player::Update(float deltaTime, Enemy &enemy, sf::RenderWindow &window, sf::Clock c)
 {
 	// PLAYERS MOVEMENT
 	sf::Vector2f players_movement = sprite.getPosition();
@@ -50,17 +50,20 @@ void Player::Update(float deltaTime, Enemy &enemy, sf::RenderWindow &window)
 		// pushing the bullets into the vector array
 		bullets.push_back(sf::RectangleShape(sf::Vector2f(20.f, 20.f)));
 		/*Setting the initial posiiton of the first bullet*/
-		bullets.back().setPosition(sprite.getPosition());
-
+		size_t lastElement = bullets.size() - 1;
+		bullets[lastElement].setPosition(sprite.getPosition().x + 55, sprite.getPosition().y - 20);
 		// calculating the bullets direction relative to the mouse position
-		angle.push_back(atan2(sf::Mouse::getPosition(window).y - sprite.getPosition().y,
+		angle.push_back(Math::calculateAngle(sf::Mouse::getPosition(window).y - sprite.getPosition().y,
 			                                  sf::Mouse::getPosition(window).x - sprite.getPosition().x));
-	}
 
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i].move(5 * cos(angle[i]), 5 * sin(angle[i]));
+		
+		counter++;
+		// shotting bullets just once every 0.5 seconds
+		std::cout << counter << std::endl;
 	}
+	
+	
+	
 }
 
 void Player::Draw(sf::RenderWindow &window)
@@ -69,7 +72,19 @@ void Player::Draw(sf::RenderWindow &window)
 
 	for (int i = 0; i < bullets.size(); i++)
 	{
+		bullets[i].setFillColor(sf::Color(0, 255, 0));
+		if (counter > 500)
+		{
+			bullets[i].setFillColor(sf::Color(255, 0, 0));
+		}
+		if (counter > 1000)
+		{
+			bullets[i].setFillColor(sf::Color(0, 0, 255));
+		}
 		window.draw(bullets[i]);
+		bullets[i].move(5 * cos(angle[i]), 5 * sin(angle[i]));
+
+		
 	
 	}
 }

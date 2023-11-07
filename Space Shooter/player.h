@@ -7,7 +7,7 @@ class Player
 public:
 	void Init();
 	void LoadTexturePlayer();
-	void Update(float delaTime, Enemy& enemy, sf::RenderWindow& window);
+	void Update(float delaTime, Enemy& enemy, sf::RenderWindow& window, sf::Clock c);
 	void Draw(sf::RenderWindow& window);
 private:
 
@@ -18,6 +18,9 @@ public:
 	float BULLET_SPEED = 0.001f;
 	float playerSpeed = 1.0f;
 	std::vector<float> angle; // calculating the angle
+
+	// counter
+	int counter = 0;
 	
 	
 private:

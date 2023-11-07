@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <math.h>
 
-
 class Math
 {
 public:

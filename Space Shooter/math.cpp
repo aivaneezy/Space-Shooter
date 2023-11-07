@@ -1,7 +1,6 @@
 #include "math.h"
 
 
-
 sf::Vector2i Math::normalizeVector(sf::Vector2i vector)
 {
 	
@@ -17,7 +16,7 @@ sf::Vector2i Math::normalizeVector(sf::Vector2i vector)
 
 }
 
-long double::CalculateAngle(long double y, long double x)
+ long double Math::calculateAngle(long double y, long double x)
 {
 	return atan2(y, x);
 }
